@@ -113,6 +113,18 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          livenessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "bundle exec sidekiqmon processes | grep $${HOSTNAME}"
+          readinessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "bundle exec sidekiqmon processes | grep $${HOSTNAME}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
